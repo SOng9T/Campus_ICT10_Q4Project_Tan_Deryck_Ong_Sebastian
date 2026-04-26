@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Classmates | 10-Topaz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Jim+Nightshade&family=Kapakana:wght@300..400&family=Pirata+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #fef9e6;
+            padding: 40px 20px;
+            color: #2c2b28;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: #000000;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ebc28e;
+        }
+
+        h2 {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+            margin: 20px 0 15px 0;
+        }
+
+        .show-btn {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            padding: 8px 20px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: block;
+            width: fit-content;
+        }
+
+        .show-btn:hover {
+            background-color: #000000;
+        }
+
+        .classmate-list {
+            margin: 20px 0;
+            padding: 10px 0;
+        }
+
+        .classmate-item {
+            background: #faf2e4;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-radius: 20px;
+            border-left: 6px solid #b87333;
+            font-size: 1rem;
+        }
+
+        .add-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #faf2e4;
+            border-radius: 16px;
+            border: 1px solid #eeddbb;
+        }
+
+        input {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 8px 12px;
+            margin: 5px;
+            width: 200px;
+            border: 1px solid #cccccc;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        button {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 8px 18px;
+            margin: 5px;
+            background-color: #f500cc;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #6b4420;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eeddbb;
+        }
+
+        .nav-links a {
+            font-family: 'Times New Roman', Times, serif;
+            color: #000000;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+            color: #5a3e1b;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eeddbb;
+            font-size: 12px;
+            color: #8b5a2b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">Classmate List</a> | 
+            <a href="attendance.html">Attendance Tracker</a> | 
+            <a href="photos.html">Photos</a>
+        </div>
+
+        <h1>My Classmates</h1>
+        
+        <button class="show-btn" onclick="displayClassmates()">Show Classmates</button>
+        
+        <div class="classmate-list">
+            <h2>Classmates List:</h2>
+            <div id="classmatesContainer"></div>
+        </div>
+
+        <div class="add-section">
+            <h2>Add a New Classmate</h2>
+            <input type="text" id="name" placeholder="Name">
+            <input type="text" id="section" placeholder="Section">
+            <input type="text" id="subject" placeholder="Favorite Subject">
+            <button onclick="addClassmate()">Add Classmate</button>
+        </div>
+
+    <footer>ICT 10 - Quarter 4 Project | Seatwork 2: Chilli and Deryck</footer>
+
+    <script>
+        
+        class Classmate {
+            constructor(name, section, favorite_subject) {
+                this.name = name;
+                this.section = section;
+                this.favorite_subject = favorite_subject;
+            }
+            
+            introduce() {
+                return `Hi! My name is ${this.name}. I am from section ${this.section}, and my favorite subject is ${this.favorite_subject}.`;
+            }
+        }
+
+        let classmates = [];
+
+        const initialClassmates = [
+            new Classmate("Deryck Tan", "10-Topaz", "TLE"),
+            new Classmate("Sean Cotioco", "10-Topaz", "Mathematics"),
+            new Classmate("Sang-Heon Choi", "10-Topaz", "Science"),
+            new Classmate("Simrandip Kaur", "10-Topaz", "Physical Education"),
+            new Classmate("Harmony Yao", "10-Topaz", "English")
+        ];
+
+        classmates = [...initialClassmates];
+
+        function displayClassmates() {
+            const container = document.getElementById('classmatesContainer');
+            
+            if (classmates.length === 0) {
+                container.innerHTML = '<p>No classmates yet.</p>';
+                return;
+            }
+            
+            let html = '';
+            for (let i = 0; i < classmates.length; i++) {
+                html += `<div class="classmate-item">
+                    ${i+1}. ${classmates[i].introduce()}
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function addClassmate() {
+            const name = document.getElementById('name').value.trim();
+            const section = document.getElementById('section').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            
+            if (!name || !section || !subject) {
+                alert('Please fill in all fields!');
+                return;
+            }
+            
+            const newClassmate = new Classmate(name, section, subject);
+            classmates.push(newClassmate);
+            
+            document.getElementById('name').value = '';
+            document.getElementById('section').value = '';
+            document.getElementById('subject').value = '';
+            
+            displayClassmates();
+            alert(`${name} has been added! Total classmates: ${classmates.length}`);
+        }
+    </script>
+</body>
+</html>

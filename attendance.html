@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Tracker | 10-Topaz</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.5.2/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.5.2/core.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Jim+Nightshade&family=Kapakana:wght@300..400&family=Pirata+One&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #fef9e6;
+            padding: 40px 20px;
+            color: #2c2b28;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: #5a3e1b;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ebc28e;
+        }
+        
+        h3 {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 18px;
+            font-weight: bold;
+            color: #5a3e1b;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .input-area {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #faf2e4;
+            border-radius: 16px;
+            border: 1px solid #eeddbb;
+        }
+        
+        .row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        label {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 140px;
+            color: #5a3e1b;
+        }
+        
+        select, input {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            padding: 8px 12px;
+            border: 1px solid #cccccc;
+            border-radius: 20px;
+            background: #ffffff;
+        }
+        
+        select {
+            min-width: 150px;
+        }
+        
+        input {
+            width: 100px;
+        }
+        
+        button {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            padding: 8px 20px;
+            background-color: #8b5a2b;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #6b4420;
+        }
+        
+        .graph-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: #faf2e4;
+            border-radius: 16px;
+            border: 1px solid #eeddbb;
+        }
+        
+        #plot {
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eeddbb;
+        }
+        
+        .nav-links a {
+            font-family: 'Times New Roman', Times, serif;
+            color: #8b5a2b;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .nav-links a:hover {
+            text-decoration: underline;
+            color: #5a3e1b;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eeddbb;
+            font-size: 12px;
+            color: #8b5a2b;
+        }
+        
+        .status-msg {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .stats {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #5a3e1b;
+            font-weight: bold;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            color: #8b5a2b;
+            font-style: italic;
+            padding: 40px 20px;
+            background: #fff8ed;
+            border-radius: 12px;
+        }
+    </style>
+    
+    <py-config>
+        packages = ["matplotlib", "numpy"]
+    </py-config>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">Classmate List</a> | 
+            <a href="attendance.html">Attendance Tracker</a> | 
+            <a href="photos.html">Photos</a>
+        </div>
+
+        <h1>Attendance Tracker</h1>
+        
+        <div class="input-area">
+            <div class="row">
+                <label>Select Day:</label>
+                <select id="daySelect">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </div>
+            
+            <div class="row">
+                <label>Number of Absences:</label>
+                <input type="number" id="absInput" value="0" min="0">
+            </div>
+            
+            <div class="row">
+                <button id="recordBtn">Record Absences</button>
+                <button id="resetBtn">Reset All Data</button>
+            </div>
+            <div id="statusMsg" class="status-msg" style="display:none;"></div>
+            <div id="statsDisplay" class="stats"></div>
+        </div>
+        
+        <div class="graph-container">
+            <h3>Weekly Absence Report</h3>
+            <div id="plot">
+                <div class="placeholder-text">Click "Record Absences" to view the graph</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>Skills Test: Attendance Tracker | Ong and Tan</footer>
+
+    <py-script>
+from pyscript import display
+import numpy as np
+import matplotlib.pyplot as plt
+from js import document
+from pyodide.ffi import create_proxy
+import logging
+
+logging.getLogger('matplotlib').setLevel(logging.ERROR)
+
+# Initialize data
+days = np.array(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+absences = np.array([0, 0, 0, 0, 0])
+graph_shown = False
+
+def show_message(msg, is_success=True):
+    msg_div = document.getElementById("statusMsg")
+    msg_div.textContent = msg
+    msg_div.style.display = "block"
+    msg_div.className = "status-msg status-success" if is_success else "status-msg"
+    from js import setTimeout
+    setTimeout(create_proxy(lambda: msg_div.style.setProperty("display", "none")), 2000)
+
+def update_stats():
+    total_absences = np.sum(absences)
+    stats_div = document.getElementById("statsDisplay")
+    if np.max(absences) > 0:
+        stats_div.innerHTML = f"Total Absences This Week: {int(total_absences)} | Highest: {int(np.max(absences))} on {days[np.argmax(absences)]}"
+    else:
+        stats_div.innerHTML = f"Total Absences This Week: 0 | No absences recorded yet"
+
+def display_graph():
+    global graph_shown
+    plt.close('all')
+    fig, ax = plt.subplots(figsize=(8, 5))
+    
+    ax.plot(days, absences, marker='o', linestyle='-', linewidth=2,
+            markersize=8, color='#8b5a2b')
+    
+    ax.set_title("Weekly Absence Report", fontfamily='Times New Roman', fontsize=14, fontweight='bold')
+    ax.set_xlabel("Days", fontfamily='Times New Roman', fontsize=12)
+    ax.set_ylabel("Number of Absences", fontfamily='Times New Roman', fontsize=12)
+    ax.grid(True, linestyle='--', alpha=0.3)
+    
+    for i, v in enumerate(absences):
+        ax.text(i, v + 0.3, str(int(v)), ha='center', va='bottom', fontsize=10, fontweight='bold')
+    
+    display(fig, target="plot", append=False)
+    plt.close(fig)
+    update_stats()
+    graph_shown = True
+
+def record_absence(event):
+    global absences
+    
+    day_select = document.getElementById("daySelect")
+    selected_day = day_select.value
+    
+    abs_input = document.getElementById("absInput")
+    abs_value = int(abs_input.value)
+    
+    if abs_value < 0:
+        show_message("Please enter a valid number (0 or greater)", False)
+        return
+    
+    day_index = list(days).index(selected_day)
+    absences[day_index] = abs_value
+    
+    display_graph()
+    show_message(f"Recorded {abs_value} absence(s) for {selected_day}")
+
+def reset_data(event):
+    global absences
+    absences = np.array([0, 0, 0, 0, 0])
+    document.getElementById("absInput").value = "0"
+    document.getElementById("daySelect").value = "Monday"
+    display_graph()
+    show_message("All attendance data has been reset")
+
+# Set up buttons
+record_btn = document.getElementById("recordBtn")
+reset_btn = document.getElementById("resetBtn")
+
+record_btn.addEventListener("click", create_proxy(record_absence))
+reset_btn.addEventListener("click", create_proxy(reset_data))
+
+# No automatic graph display on page load
+    </py-script>
+</body>
+</html>
